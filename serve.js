@@ -1,10 +1,8 @@
-var server = require('server');
-var { get } = server.router;
-
+// var server = require('server');
+// var { get } = server.router;
 
 // Setup the Raspberry pi
 var rpio = require('rpio');
-
 rpio.open(11, rpio.OUTPUT);
 
 function ledOn() {
@@ -24,20 +22,23 @@ function blink() {
   }, 50);
 }
 
-server({ port: 3000 }, [
-  get('/', ctx => {
-    console.log('a request is coming...');
-    return "default page"
-    //blink();
-  }),
-  get('/off', ctx => {
-    return "LED off"
-    // ledOff()
-  }),
-  get('/on', ctx => {
-    return "Led on"
-    // ledOn()
-  }),
-]);
+var express = require('express');
+var app = express();
 
-console.log('server starts on 3000 port');
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
+
+app.get('/on', function (req, res) {
+  res.send('Led On');
+  ledOn()
+});
+
+app.get('/off', function (req, res) {
+  res.send('Led Off');
+  ledOff()
+});
+
+app.listen(8000, function () {
+  console.log('Example app listening on port 8000!');
+});
